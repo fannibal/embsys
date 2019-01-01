@@ -21,3 +21,13 @@ Several exercises are available :
   * GNU/Linux System Programming
   * Embedded system with RPI3
   * Usefool Tools (autotools, docker, git, ...)
+
+
+
+
+## Answers
+
+You will find the answers of :
+
+  * lab sysprog part 1 2 and 3 in the repository PART1, PART2 and PART3
+  * the rpi3 and QEMU labs in "labs/rpi3/reponses.md"
