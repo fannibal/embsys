@@ -8,7 +8,7 @@ import time
     
 IP_CAM = '192.168.1.10'
 PORT_CAM = 5005
-IP_SERVO = '192.168.1.12'
+IP_SERVO = '192.168.1.10'
 PORT_SERVO = 5005
 BUFFER_SIZE = 1024
 
@@ -30,7 +30,7 @@ class Client(Thread):
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             s.connect((self.IP, self.PORT))
             while s.recv(BUFFER_SIZE)!= "end":
-                print "Connection on {}".format(self.PORT)
+                print("Connection on {}".format(self.PORT))
                 m = input(">> ")
                 s.send(m.encode())
             s.close()
