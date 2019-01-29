@@ -1,4 +1,4 @@
-TO DO : DESCRIPTION BULLSHIT BUILDROOT
+TO DO : DESCRIPTION ETAPES BUILDROOT
 
 # Installation buildroot + flashage raspberry :
 
