@@ -7,7 +7,7 @@ from threading import Thread, RLock
 import time
     
 IP_CAM = '192.168.1.10'
-PORT_CAM = 5005
+PORT_CAM = 5006
 IP_SERVO = '192.168.1.10'
 PORT_SERVO = 5005
 BUFFER_SIZE = 1024
@@ -29,25 +29,28 @@ class Client(Thread):
         elif self.flag == 1: #servomoteur
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             s.connect((self.IP, self.PORT))
+            print("Connection on {}".format(self.PORT))
+            m = "fraise"
+            s.send(m.encode())
             while s.recv(BUFFER_SIZE)!= "end":
                 print("Connection on {}".format(self.PORT))
-                m = input(">> ")
+                #m = input(">> ")
                 s.send(m.encode())
             s.close()
 
-            print "received data:", data
+            print("received data:", data)
    
 if __name__ == '__main__':
     # Creation des threads
-    thread_cam = Client(0,IP_CAM,PORT_CAM)
+    #thread_cam = Client(0,IP_CAM,PORT_CAM)
     thread_servo = Client(1,IP_SERVO,PORT_SERVO)
 
     # Lancement des threads
-    thread_cam.start()
+    #thread_cam.start()
     thread_servo.start()
 
     # Attend que les threads se terminent
-    thread_cam.join()
+    #thread_cam.join()
     thread_servo.join()
     
     print("Done")
