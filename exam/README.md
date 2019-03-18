@@ -29,7 +29,8 @@ Une image flashable du projet est disponible à l'adresse suivante : `https://dr
 
 L'image peut être décompressée à l'aide de la commande suivante :
 
-```` $ unzip image.zip -d [destination]
+```` 
+$ unzip image.zip -d [destination]
 ````
 Un fichier au format .img est créé.
 
@@ -38,7 +39,8 @@ Un fichier au format .img est créé.
 On insère la carte SD dans l'ordinateur hôte à l'aide d'un adapteur USB-micro SD (ou SD-micro SD).
 Pour récupérer le nom de disque associé à la carte SD, on se positionne dans le répertoire /dev et on branche-débranche l'adaptateur USB-SD. Le nom *sdX* (où *X* est une lettre) qui apparait et disparait est le disque qui nous intéresse. Pour se faire, il peut être intéressant d'utiliser l'utilitaire nautilus pour afficher l'état du dossier /dev rafraîchi régulièrement :
 
-```` $ sudo apt-get install nautilus
+```` 
+$ sudo apt-get install nautilus
 $ nautilus /dev
 ````
 
@@ -46,7 +48,8 @@ $ nautilus /dev
 
 On utilise l'utilitaire `dd` de la manière suivante :
 
-```` $ sudo dd if=/dev/zero of=/dev/sdx obs=2048
+```` 
+$ sudo dd if=/dev/zero of=/dev/sdx obs=2048
 ````
 
 ## Flasher la carte SD avec l'image du projet.
