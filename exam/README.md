@@ -56,7 +56,8 @@ $ sudo dd if=/dev/zero of=/dev/sdx obs=2048
 
 On utilise à nouveau `dd` :
 
-```` $ sudo dd if=<chemin vers l'image du projet>/image_projet.img of=/dev/sdx
+```` 
+$ sudo dd if=<chemin vers l'image du projet>/image_projet.img of=/dev/sdx
 ````
 
 
@@ -78,12 +79,14 @@ Cette méthode implique l'utilisation de docker et se découpe en les étapes su
 
 Le projet se base sur l'image linux proposée par pblottiere téléchargeable sur les serveurs distants de dépôt docker :
 
-```` $ docker pull pblottiere/embsys-rpi3-buildroot-video
+```` 
+$ docker pull pblottiere/embsys-rpi3-buildroot-video
 ````
 
 Pour créer un conteneur:
 
-```` $ docker run -it pblottiere/embsys-rpi3-buildroot-video /bin/bash
+```` 
+$ docker run -it pblottiere/embsys-rpi3-buildroot-video /bin/bash
 docker# cd /root
 docker# ls
 buildroot-precompiled-2017.08.tar.gz
@@ -109,7 +112,8 @@ dans le fichier de configuration Buildroot.
 On insère la carte SD dans l'ordinateur hôte à l'aide d'un adapteur USB-micro SD (ou SD-micro SD).
 Pour récupérer le nom de disque associé à la carte SD, on se positionne dans le répertoire /dev et on branche-débranche l'adaptateur USB-SD. Le nom *sdX* (où *X* est une lettre) qui apparait et disparait est le disque qui nous intéresse. Pour se faire, il peut être intéressant d'utiliser l'utilitaire nautilus pour afficher l'état du dossier /dev rafraîchi régulièrement :
 
-```` $ sudo apt-get install nautilus
+```` 
+$ sudo apt-get install nautilus
 $ nautilus /dev
 ````
 
@@ -117,48 +121,57 @@ $ nautilus /dev
 
 On utilise l'utilitaire `dd` de la manière suivante :
 
-```` $ sudo dd if=/dev/zero of=/dev/sdx obs=2048
+```` 
+$ sudo dd if=/dev/zero of=/dev/sdx obs=2048
 ````
 
 ## Flasher la carte SD avec l'image du projet.
 
 On utilise à nouveau `dd` mais nous avons cette fois-ci besoin du chemin d'accès vers l'image linux contenue dans le docker. Pour récupérer l'identifiant du docker, on ouvre un nouveau terminal et exécute la commande suivante :
 
-```` $ docker ps -a
+```` 
+$ docker ps -a
 ````
 
 On utilise cet identifiant pour copier le fichier image *sdcard.img*. Celui-ci va à son tour pouvoir être flashé sur la carte SD avec la commande `dd` et l'identifiant *sdX* récupéré précédemment..
 
 
- ```` $ docker cp <container_id>:/root/buildroot-precompiled-2017.08/output/images/sdcard.img .
- sudo dd if=sdcard.img of=/dev/<sdX> ````
+ ```` 
+ $ docker cp <container_id>:/root/buildroot-precompiled-2017.08/output/images/sdcard.img .
+ sudo dd if=sdcard.img of=/dev/<sdX> 
+````
 
-```` $ sudo dd if=<chemin vers l'image du projet>/image_projet.img of=/dev/sdx
+```` 
+$ sudo dd if=<chemin vers l'image du projet>/image_projet.img of=/dev/sdx
 ````
 
 ## Modifier les fichiers de la partition du boot
 
 On localise et récupère les fichiers *start_x.elf* et *fixup_x.dat* à l'aide des commandes `find` et `cp`. Les fichiers sont copiés dans la première partition de la carte SD, ie `/dev/sdbX1`.
 
- ```` docker: $ find . -name start_x.elf
+ ```` 
+ docker: $ find . -name start_x.elf
  docker: $ find . -name fixup_x.dat
  ````
 
  Puis depuis un nouveau terminal, on utilise les chemins trouvés précédemment pour copier les deux fichiers sur la première partition de la carte SD :
  
- ```` $ docker cp <container_id>:<chemin_start_x.elf>/start_x.elf /dev/sdX1
+ ```` 
+ $ docker cp <container_id>:<chemin_start_x.elf>/start_x.elf /dev/sdX1
  $ docker cp <container_id>:<chemin_fixup_x.elf>/fixup_x.dat /dev/sdX1
  ````  
 
  Il faut finalement modifier le fichier `config.txt` de la première partition de la carte SD pour ajouter :  
  
- ```` start_x=1
+ ```` 
+ start_x=1
  gpu_mem=128
  ````  
 
  On en profite pour rajouter la communication SSH, utile pour du débug à l'avenir, en créant un fichier vide à la racine de la première partition :
  
- ```` $ touch ssh
+ ```` 
+ $ touch ssh
  ````  
 
 ## Modifier les fichiers du Root File System de la carte SD
@@ -167,15 +180,18 @@ Dans notre implémentation, il peut être intéressant de rendre l'adresse IP de
 
 Ouvrir le fichier :
 
-```` $ sudo nano /etc/network/interfaces
+```` 
+$ sudo nano /etc/network/interfaces
 ````
 remplacer
 
-```` iface eth0 inet dhcp
+```` 
+iface eth0 inet dhcp
 ````
 par
 
-```` iface eth0 inet static
+```` 
+iface eth0 inet static
 
 address 192.168.1.x
 
@@ -193,12 +209,14 @@ Il est possible de faire la même chose pour un réseau wifi en remplaçant *eth
 
 Les fichiers du projet sont disponibles en stand alone sur le dépôt git suivant :
 
-```` $ git <chemin vers dossier git> DEPOT_GIT
+```` 
+$ git <chemin vers dossier git> DEPOT_GIT
 ````
 
 Il ne reste plus qu'à les déposer sur le dossier home du RFS de la raspberry à l'aide de la commande `cp`. Le dossier contient notamment deux sous-dossiers `SER2` et `V4L2` correspondant respectivement aux codes de contrôle des servomoteurs et de la caméra. Nous copions ces deux dossiers dans le dossier `home` de la Raspberry :
 
-```` $ cp <chemin vers dossier git>/SER2 /dev/sdX2/home/
+```` 
+$ cp <chemin vers dossier git>/SER2 /dev/sdX2/home/
 $ cp <chemin vers dossier git>/V4L2 /dev/sdX2/home/
 ````
 
@@ -213,7 +231,8 @@ $ ./configure CC=~/buildroot-precompiled-2017.08/output/host/usr/bin/arm-linux-g
 Le code fourni originellement par autoconf n'est pas fonctionnel, il faut pour cela modifier le fichier config.h : en remplaçant `#define HAVE_MALLOC 0` par `#define HAVE_MALLOC 1` et en commentant `#define malloc rpl_malloc`.
 Il ne reste plus qu'à compiler le code :
 
-```` make install
+```` 
+make install
 ````
 
 La carte SD est alors correctement configurée et peut être mise dans le port de la raspberry. On connectera alors la raspberry à l'ordinateur client par Ethernet (ou au réseau wifi selon le choix effectué à l'étape 5).
@@ -228,7 +247,8 @@ Il reste à rajouter le script de service du projet pour lancer les serveurs de 
 
 Au besoin, on peut changer l'adresse statique PC client avec la commande suivante, où *x* est compris entre 2 et 254, 10 exclu dans le cas où vous avez effectuée l'installation rapide puisqu'il s'agit de l'adresse de la raspberry) :  
 
-```` ifconfig eth0 192.168.1.x
+```` 
+ifconfig eth0 192.168.1.x
 ````
 
 
@@ -237,18 +257,21 @@ Au besoin, on peut changer l'adresse statique PC client avec la commande suivant
 
 Pour utiliser le projet une fois l'installation faite, il faut tout d'abord se connecter par câble ethernet à la Raspberry. Ensuite, il faut attribuer à son hôte (ordinateur) une adresse IP dans la même classe que celle de la Raspberry en utilisant ifconfig. Par exemple: 
 
-```` $ sudo ifconfig [nom interface réseau] 192.168.1.11
+```` 
+$ sudo ifconfig [nom interface réseau] 192.168.1.11
 ````
 
 Il convient de se connecter en ssh (mot de passe: `user1*` ) pour lancer le serveur du servomoteur:
 
-```` $ ssh user@192.168.1.10
+```` 
+$ ssh user@192.168.1.10
 ````
 
 Il faudra passer en super utilisateur avec la commande su (mot de passe: `root1*` ), nécessaire pour utiliser les GPIO.
 Enfin, il faut lancerle serveur avec la commande suivante:
 
-```` $ python /home/user/SER2/server_servo.py
+```` 
+$ python /home/user/SER2/server_servo.py
 ````
 
 Le serveur de la caméra se lançant au démarrage, il n'y a rien a faire de ce côté!
@@ -265,14 +288,16 @@ Il est toutefois important de noter que les serveurs ne supporte pas la perte de
 
 On peut récupérer les identifiants par défaut de la Raspberry en explorant le fichier *users.tables* à l'aide de la commande `cat`. A priori, le couple est `user/user1*`.
 
-```` ~/buildroot-precompiled-2017.08# cat users.tables user -1 users_group -1 =user1* /home/user /bin/sh -
+```` 
+~/buildroot-precompiled-2017.08# cat users.tables user -1 users_group -1 =user1* /home/user /bin/sh -
 ````
 
 ## Erreur de communication entre le client et le serveur caméra
 
 Ouvrir un nouveau terminal pour se connecter à la raspberry en SSH depuis le PC client :
 
-```` $ sudo ssh user@192.168.1.10
+```` 
+$ sudo ssh user@192.168.1.10
 ````
 
 Ouvrir le fichier de log `syslog`
@@ -283,13 +308,15 @@ Relancer le code client depuis un autre
 On va alors se connecter à la raspberry via le port série.
 Pour cela, insérer la carte SD dans la Raspberry et connecter le port série au PC client. Depuis le PC client, se positionner dans le répertoire /dev avec Nautilus :  
 
-```` $ nautilus /dev
+```` 
+$ nautilus /dev
 ````
 
 On allume la Raspberry et on récupère l'identifiant *ttyUSBX* qui apparait.
 On va ensuite configurer ce port série avec GTKTerm. Si besoin, on l'installe et le lance avec les commandes suivantes :
 
- ```` $ sudo apt-get install gtkterm
+ ```` 
+ $ sudo apt-get install gtkterm
  $ sudo gtkterm
  ````
 
@@ -300,7 +327,8 @@ Dans la page de configuration on sélectionne comme paramètres de GTKTerm :
 
 Une fois les paramètres rentrés, on peut redémarrer la raspberry. La raspberry va alors envoyer pendant son démarrage les informations relatives au lancement des scripts de services. Si les deux serveurs se lancent correctement au démarrage, les lignes suivantes doivent apparaître sur le terminal GTKTerm :
 
-```` Starting video capture            # Lancement du service
+```` 
+Starting video capture            # Lancement du service
 Starting /dev/video0              # Lancement de la caméra
 Starting v4l2grab server          # Lancement du serveur caméra
 Starting servo handling server    # Lancement du serveur servomoteurs #non implémentée
