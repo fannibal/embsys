@@ -28,6 +28,7 @@ Une image flashable du projet est disponible à l'adresse suivante : `https://dr
 ## Décompresser l'image linux
 
 L'image peut être décompressée à l'aide de la commande suivante :
+
 ```` $ unzip image.zip -d [destination]
 ````
 Un fichier au format .img est créé.
@@ -44,6 +45,7 @@ $ nautilus /dev
 ## Formater la carte SD
 
 On utilise l'utilitaire `dd` de la manière suivante :
+
 ```` $ sudo dd if=/dev/zero of=/dev/sdx obs=2048
 ````
 
@@ -111,6 +113,7 @@ $ nautilus /dev
 ## Formater la carte SD
 
 On utilise l'utilitaire `dd` de la manière suivante :
+
 ```` $ sudo dd if=/dev/zero of=/dev/sdx obs=2048
 ````
 
@@ -139,16 +142,19 @@ On localise et récupère les fichiers *start_x.elf* et *fixup_x.dat* à l'aide 
  ````
 
  Puis depuis un nouveau terminal, on utilise les chemins trouvés précédemment pour copier les deux fichiers sur la première partition de la carte SD :
+ 
  ```` $ docker cp <container_id>:<chemin_start_x.elf>/start_x.elf /dev/sdX1
  $ docker cp <container_id>:<chemin_fixup_x.elf>/fixup_x.dat /dev/sdX1
  ````  
 
  Il faut finalement modifier le fichier `config.txt` de la première partition de la carte SD pour ajouter :  
+ 
  ```` start_x=1
  gpu_mem=128
  ````  
 
  On en profite pour rajouter la communication SSH, utile pour du débug à l'avenir, en créant un fichier vide à la racine de la première partition :
+ 
  ```` $ touch ssh
  ````  
 
@@ -157,12 +163,15 @@ On localise et récupère les fichiers *start_x.elf* et *fixup_x.dat* à l'aide 
 Dans notre implémentation, il peut être intéressant de rendre l'adresse IP de la raspberry statique afin de ne pas se tromper à l'avenir. Nous nous placerons dans cet exemple dans une communication ethernet sur le réseau privé 192.168.1.X mais cet exemple est adaptable au réseau wifi à condition qu'il n'y ait pas de whitelist en vigueur sur le réseau. Pour se faire, on modifie le fichier */etc/network/interfaces* de la manière suivante :
 
 Ouvrir le fichier :
+
 ```` $ sudo nano /etc/network/interfaces
 ````
 remplacer
+
 ```` iface eth0 inet dhcp
 ````
 par
+
 ```` iface eth0 inet static
 
 address 192.168.1.x
@@ -173,12 +182,14 @@ network 192.168.1.0
 
 gateway 192.168.1.1
 ````
+
 Il est possible de faire la même chose pour un réseau wifi en remplaçant *eth0* par *wlan0*.
 
 
 ## Copier les fichiers du projet sur la carte SD
 
 Les fichiers du projet sont disponibles en stand alone sur le dépôt git suivant :
+
 ```` $ git <chemin vers dossier git> DEPOT_GIT
 ````
 
@@ -213,6 +224,7 @@ Il reste à rajouter le script de service du projet pour lancer les serveurs de 
 - Username : user - Password : user1* - IP address : 192.168.1.10
 
 Au besoin, on peut changer l'adresse statique PC client avec la commande suivante, où *x* est compris entre 2 et 254, 10 exclu dans le cas où vous avez effectuée l'installation rapide puisqu'il s'agit de l'adresse de la raspberry) :  
+
 ```` ifconfig eth0 192.168.1.x
 ````
 
@@ -256,6 +268,7 @@ On peut récupérer les identifiants par défaut de la Raspberry en explorant le
 ## Erreur de communication entre le client et le serveur caméra
 
 Ouvrir un nouveau terminal pour se connecter à la raspberry en SSH depuis le PC client :
+
 ```` $ sudo ssh user@192.168.1.10
 ````
 
@@ -266,11 +279,13 @@ Relancer le code client depuis un autre
 ## Erreur de connexion Ethernet
 On va alors se connecter à la raspberry via le port série.
 Pour cela, insérer la carte SD dans la Raspberry et connecter le port série au PC client. Depuis le PC client, se positionner dans le répertoire /dev avec Nautilus :  
+
 ```` $ nautilus /dev
 ````
 
 On allume la Raspberry et on récupère l'identifiant *ttyUSBX* qui apparait.
 On va ensuite configurer ce port série avec GTKTerm. Si besoin, on l'installe et le lance avec les commandes suivantes :
+
  ```` $ sudo apt-get install gtkterm
  $ sudo gtkterm
  ````
@@ -281,6 +296,7 @@ Dans la page de configuration on sélectionne comme paramètres de GTKTerm :
 - Port : /dev/<ttyUSBX>
 
 Une fois les paramètres rentrés, on peut redémarrer la raspberry. La raspberry va alors envoyer pendant son démarrage les informations relatives au lancement des scripts de services. Si les deux serveurs se lancent correctement au démarrage, les lignes suivantes doivent apparaître sur le terminal GTKTerm :
+
 ```` Starting video capture            # Lancement du service
 Starting /dev/video0              # Lancement de la caméra
 Starting v4l2grab server          # Lancement du serveur caméra
